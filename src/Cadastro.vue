@@ -37,59 +37,68 @@
 	      <button id="btnRegistrar" @click.prevent="cadastrarUser" type="submit" class="btn btn-default">Registrar</button>
 	      <button id="btnVoltar" @click="voltar" type="button" class="btn btn-default">Voltar</button>
 
-	      <h1>{{ uid }} </h1>
-
 	    </form>
   	</section>
-</template>	
+</template>
 
 <script>
 	import {db} from './firebase';
-	
+	import {usersRef} from './firebase';
+
 	export default {
-		beforeDestroy(){
-	
+		firebase: {
+			users: usersRef
 		},
 		data (){
 			return {
+
 				email: '',
 				password: '',
 				nome: '',
 				sobrenome: '',
 				data_nasc: '',
 				escola: '',
-				uid: ''
-				
 			}
 		},
+
 		methods: {
 			voltar: function(){
 				this.$router.push('/');
 			},
 			cadastrarUser: function(){
-				const auth = firebase.auth();
-	      		const promise = auth.createUserWithEmailAndPassword(this.email, this.password)
-	      		promise
-	      		.then(function(userinfo){
-	        		console.log(userinfo.uid);
-	        		// var user = firebase.auth().currentUser;
-	        		db.ref("users").child(userinfo.uid).set(
-	        			{
-			    			id: userinfo.uid,
-			    			nome: this.nome,
-			    			sobrenome: 'teste',
-			    			email: 'teste',
-			    			escola: 'teste',
-			    			data_nasc: 'teste',
-			    			pass: 'teste'
-		      			}
-		      		);
-		      		console.log('foi')
-			      		})
-	      		//Sign in
-	      		.catch(e => console.log(e.message));
-			}
+				const email = this.email;
+				const password = this.password;
+				const nome = this.nome;
+				const sobrenome = this.sobrenome;
+				const data_nasc = this.data_nasc;
+				const escola = this.escola;
 
+				const auth = firebase.auth();
+				var user;
+	      const promise = auth.createUserWithEmailAndPassword(this.email, this.password);
+				promise.then(function(user){
+					usersRef.child(user.uid).set(
+						{
+							nome: nome,
+							sobrenome: sobrenome,
+							email: email,
+							escola: escola,
+							data_nasc: data_nasc,
+							pass: password,
+							uid: user.uid,
+
+						}
+					);
+
+				}).catch(e => console.log(e.message));
+
+				// const userUid = firebase.auth().currentUser.uid;
+
+
+
+
+		     	console.log('foi');
+			}
 		}
 	}
 </script>

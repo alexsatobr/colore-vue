@@ -1,14 +1,26 @@
 <template>
 	<div class="container">
 		<h1>Home</h1>
+		<h1>Bem-vindo {{  }}</h1>
 		<button @click="logOut">Log Out</button>
- 		
-  	</div>
+
+		<div class="col-md-6">
+      <h1 id="display"></h1>
+    </div>
+    <div class="col-md-6">
+      <button id="excludeBtn" type="button">Excluir foto</button>
+      <img id="profileImg" />
+    </div>
+
+  </div>
+
 
 </template>
 
 <script>
-  export default {
+	import {usersRef} from './firebase';
+
+	export default {
   	mounted: function() {
 		firebase.auth().onAuthStateChanged(firebaseUser => {
 	    	if(firebaseUser) {
@@ -27,16 +39,27 @@
     		}
     	});
 
-  		},	
+  		},
     data() {
     	return {
+				nome: '',
+				uid: '',
 
     	}
     },
+
+		firebase(){
+      const userId = firebase.auth().currentUser.uid
+      return {
+        users: db.ref('users')
+                    .child(userId)
+                    .child('nome')
+      }
+    }
     methods: {
     	logOut: function() {
     		 firebase.auth().signOut();
-    	} 
+    	}
     }
   }
 </script>

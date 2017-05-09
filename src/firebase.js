@@ -7,6 +7,8 @@ const firebaseApp = firebase.initializeApp({
 	storageBucket: "colore-e6251.appspot.com",
 	messagingSenderId: "519742155779"
 });
-  
+
 
 export const db = firebaseApp.database();
+
+export let usersRef = db.ref('users');

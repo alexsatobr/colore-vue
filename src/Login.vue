@@ -12,32 +12,32 @@
 	    <h1> {{ loggedin }} </h1>
 
   	</section>
-  	
-</template>	
+
+</template>
 
 <script>
 	import {db} from './firebase';
 
 	export default {
 		mounted: function() {
-    		firebase.auth().onAuthStateChanged(firebaseUser => {
-		    	if(firebaseUser) {
-		    		this.loggedin = 'true';
-			        console.log(firebaseUser);
-			        console.log("Sign-in provider: "+firebaseUser.providerId);
-			        console.log("  Provider-specific UID: "+firebaseUser.uid);
-			        console.log("  Name: "+firebaseUser.displayName);
-			        console.log("  Email: "+firebaseUser.email);
-			        console.log("  Photo URL: "+firebaseUser.photoURL);
-			        this.$router.push('/home');
+  		firebase.auth().onAuthStateChanged(firebaseUser => {
+	    	if(firebaseUser) {
+	    		this.loggedin = 'true';
+		        console.log(firebaseUser);
+		        console.log("Sign-in provider: "+firebaseUser.providerId);
+		        console.log("  Provider-specific UID: "+firebaseUser.uid);
+		        console.log("  Name: "+firebaseUser.displayName);
+		        console.log("  Email: "+firebaseUser.email);
+		        console.log("  Photo URL: "+firebaseUser.photoURL);
+						this.$router.push('/home');
 
-	  			} else {
-	        		console.log('not logged in');
-	        		this.$router.push('/');
-        		}
-        	});
+  			} else {
+        		console.log('not logged in');
+        		this.$router.push('/');
+      		}
+      	});
 
-  		},	
+  	},
 		data() {
 			return {
 				email: '',
@@ -63,7 +63,7 @@
   				this.$router.push('/cadastro');
   			},
      	 	goHome(){
-     	 		this.loggedin == true ? this.$router.push('/') : this.$router.push('/');
+     	 		this.loggedin == true ? this.$router.push('/home') : this.$router.push('/');
      	 	},
      	 	signInWithGoogle: function() {
 		        const provider = new firebase.auth.GoogleAuthProvider().addScope('https://www.googleapis.com/auth/plus.login');
@@ -71,7 +71,7 @@
 		        	this.user = result.user
 		        }).catch(err => console.log(error))
 		    }
-     	 
+
    		}
 
 	}
