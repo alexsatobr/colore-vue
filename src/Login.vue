@@ -1,5 +1,3 @@
-
-
 <template>
 	<section id="sec1" class="section">
 	    <input v-model="email" id="txtEmail" type="text" name="email" placeholder="email">
@@ -7,13 +5,14 @@
 	    <button id="btnLogin" @click="login" class="btn btn-action">Log In</button>
 	    <!-- <button id="btnSignUp" class="btn btn-secondary">Sign Up</button> -->
 	    <button id="btnLogout" class="btn btn-primary hide">Log Out</button>
-	    <button id="btnRegistre" class="btn btn-primary">Registre-se</button>
-	    <button id="btnGoogle" class="btn btn-primary">Registrar com o Gmail</button>
+	    <button id="btnRegistre" @click="cadastro" class="btn btn-primary">Cadastre-se</button>
+	    <button id="btnGoogle" @click="signInWithGoogle" class="btn btn-primary">Registrar com o Gmail</button>
 	    <h1> {{ email }} </h1>
 	    <h1> {{ password }} </h1>
 	    <h1> {{ loggedin }} </h1>
 
   	</section>
+  	
 </template>	
 
 <script>
@@ -30,9 +29,11 @@
 			        console.log("  Name: "+firebaseUser.displayName);
 			        console.log("  Email: "+firebaseUser.email);
 			        console.log("  Photo URL: "+firebaseUser.photoURL);
+			        this.$router.push('/home');
 
 	  			} else {
 	        		console.log('not logged in');
+	        		this.$router.push('/');
         		}
         	});
 
@@ -57,7 +58,20 @@
   			login: function(){
   				firebase.auth().signInWithEmailAndPassword(this.email, this.password).catch(e => console.log(e.message));
   				console.log('Foi');
-  			}
+  			},
+  			cadastro: function(){
+  				this.$router.push('/cadastro');
+  			},
+     	 	goHome(){
+     	 		this.loggedin == true ? this.$router.push('/') : this.$router.push('/');
+     	 	},
+     	 	signInWithGoogle: function() {
+		        const provider = new firebase.auth.GoogleAuthProvider().addScope('https://www.googleapis.com/auth/plus.login');
+		        firebase.auth().signInWithPopup(provider).then((result) => {
+		        	this.user = result.user
+		        }).catch(err => console.log(error))
+		    }
+     	 
    		}
 
 	}

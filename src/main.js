@@ -4,28 +4,28 @@ import VueFire from 'vuefire';
 import App from './App.vue'
 import VueRouter from 'vue-router';
 import Login from './Login.vue';
-// import Content from './Content.vue';
+import Cadastro from './Cadastro.vue';
+import Home from './Home.vue';
 
-export const eventBus = new Vue();
-
-Vue.use(VueRouter);
 
 // explicit installation required in module environments
 Vue.use(VueFire);
 
+Vue.use(VueRouter);
+
+const routes = [
+	{ path: '/', component: Login },
+	{ path: '/cadastro', component: Cadastro },
+	{ path: '/home', component: Home }
+]
+
 const router = new VueRouter ({
-	routes: [
-		{ path: '', component: Login }
-		// { path: '/home', component: Content}
-	],
+	routes: routes,
 	mode: 'history'
-});
-
-
-
+}); 
 
 new Vue({
   el: '#app',
-  render: h => h(App),
-  router: router
+  router,
+  render: h => h(App)
 })
