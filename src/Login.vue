@@ -10,6 +10,7 @@
 	    <h1> {{ email }} </h1>
 	    <h1> {{ password }} </h1>
 	    <h1> {{ loggedin }} </h1>
+	    <h1> {{ firstName }} </h1>
 
   	</section>
 
@@ -29,7 +30,7 @@
 		        console.log("  Name: "+firebaseUser.displayName);
 		        console.log("  Email: "+firebaseUser.email);
 		        console.log("  Photo URL: "+firebaseUser.photoURL);
-						this.$router.push('/home');
+				this.$router.push('/home');
 
   			} else {
         		console.log('not logged in');
@@ -42,7 +43,10 @@
 			return {
 				email: '',
 				password: '',
-				loggedin: 'false'
+				firstName: '',
+				lastName: '',
+				loggedin: 'false',
+				cadastroGoogle: 'false'
 			}
 		},
 		firebase: {
@@ -66,9 +70,28 @@
      	 		this.loggedin == true ? this.$router.push('/home') : this.$router.push('/');
      	 	},
      	 	signInWithGoogle: function() {
-		        const provider = new firebase.auth.GoogleAuthProvider().addScope('https://www.googleapis.com/auth/plus.login');
-		        firebase.auth().signInWithPopup(provider).then((result) => {
-		        	this.user = result.user
+     	 		var firstName;
+    			var lastName;
+		        const provider = new firebase.auth.GoogleAuthProvider();
+		        firebase.auth().signInWithPopup(provider).then(function(result) {
+		        	var token = result.credential.accessToken;
+
+
+				  	// The signed-in user info.
+				  	var objUser = result.user;
+				  	var a = objUser.displayName.indexOf(' ');
+      				firstName = objUser.displayName.substring(0, a);
+      				lastName = objUser.displayName.substring(a + 1);
+      				this.firstName = firstName;
+      				this.lastName = lastName;
+			
+				  // 	var acessoDB = db.ref('users').child(result.uid).on('value', function(snapshot){
+              			
+      //         			if(!snapshot){
+      //           			this.cadastroGoogle = 'true';
+      //         			}
+      //       		});
+
 		        }).catch(err => console.log(error))
 		    }
 
